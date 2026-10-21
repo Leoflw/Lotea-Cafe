@@ -14,7 +14,7 @@ de arquitectura — ver la sección "Camino a Firestore" más abajo.
 ## Cómo correrla
 
 ```bash
-cd cafe_match_marketplace
+cd Lotea-Cafe
 flutter pub get
 flutter run                      # con el teléfono conectado
 # o
