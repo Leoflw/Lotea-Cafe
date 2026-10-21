@@ -18,7 +18,8 @@ class CoffeeLotCard extends StatelessWidget {
   final VoidCallback onTap;
   final Widget? trailing;
 
-  const CoffeeLotCard({super.key, required this.lote, required this.onTap, this.trailing});
+  const CoffeeLotCard(
+      {super.key, required this.lote, required this.onTap, this.trailing});
 
   @override
   Widget build(BuildContext context) {
@@ -40,14 +41,18 @@ class CoffeeLotCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (destacado)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 8),
                   child: Row(
                     children: [
-                      const Icon(Icons.auto_awesome, size: 13, color: AppColors.leafGreen),
-                      const SizedBox(width: 4),
-                      const Text('Coincide con tus preferencias',
-                          style: TextStyle(color: AppColors.leafGreen, fontSize: 11, fontWeight: FontWeight.bold)),
+                      Icon(Icons.auto_awesome,
+                          size: 13, color: AppColors.leafGreen),
+                      SizedBox(width: 4),
+                      Text('Coincide con tus preferencias',
+                          style: TextStyle(
+                              color: AppColors.leafGreen,
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold)),
                     ],
                   ),
                 ),
@@ -60,7 +65,8 @@ class CoffeeLotCard extends StatelessWidget {
                     width: 84,
                     height: 84,
                     borderRadius: BorderRadius.circular(14),
-                    ampliable: false, // el toque de la tarjeta abre el detalle; ahí se amplía la galería
+                    ampliable:
+                        false, // el toque de la tarjeta abre el detalle; ahí se amplía la galería
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -72,7 +78,8 @@ class CoffeeLotCard extends StatelessWidget {
                             Expanded(
                               child: Text(
                                 lote.nombre,
-                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 15),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -80,28 +87,36 @@ class CoffeeLotCard extends StatelessWidget {
                             if (vendedor?.verificado == true)
                               const Padding(
                                 padding: EdgeInsets.only(left: 4),
-                                child: Icon(Icons.verified, size: 15, color: AppColors.leafGreen),
+                                child: Icon(Icons.verified,
+                                    size: 15, color: AppColors.leafGreen),
                               ),
                           ],
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          vendedor != null ? '${vendedor.nombreMarca} · ${vendedor.departamento}' : lote.varietyPrincipal,
-                          style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+                          vendedor != null
+                              ? '${vendedor.nombreMarca} · ${vendedor.departamento}'
+                              : lote.varietyPrincipal,
+                          style: TextStyle(
+                              color: Colors.grey.shade600, fontSize: 12),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 3),
                         Text(
                           '${lote.proceso} · ${lote.varietyPrincipal}',
-                          style: TextStyle(color: Colors.grey.shade500, fontSize: 12),
+                          style: TextStyle(
+                              color: Colors.grey.shade500, fontSize: 12),
                         ),
                         const SizedBox(height: 8),
                         Row(
                           children: [
                             Text(
                               formatCOPPorUnidad(lote.precioCOP, lote.unidad),
-                              style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.coffeeDark, fontSize: 13.5),
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.coffeeDark,
+                                  fontSize: 13.5),
                             ),
                             const SizedBox(width: 8),
                             AvailabilityChip(disponible: lote.disponible),

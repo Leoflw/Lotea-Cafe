@@ -39,12 +39,14 @@ class SwipeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final usuario = context.read<SessionProvider>().usuario;
-    final coincide = usuario != null && context.read<MockStore>().coincideConPreferencias(lote, usuario);
+    final coincide = usuario != null &&
+        context.read<MockStore>().coincideConPreferencias(lote, usuario);
     final origen = vendedor?.departamento ?? '';
 
     return Semantics(
       button: true,
-      label: 'Ver perfil de ${vendedor?.nombreMarca ?? lote.nombre}, ${lote.nombre}',
+      label:
+          'Ver perfil de ${vendedor?.nombreMarca ?? lote.nombre}, ${lote.nombre}',
       child: Material(
         color: Colors.white,
         elevation: 3,
@@ -80,21 +82,30 @@ class SwipeCard extends StatelessWidget {
                                   spacing: 6,
                                   runSpacing: 6,
                                   children: [
-                                    if (vendedor?.verificado == true) const VerifiedBadge(compacto: true),
+                                    if (vendedor?.verificado == true)
+                                      const VerifiedBadge(compacto: true),
                                     if (coincide) const _EtiquetaPreferencias(),
                                   ],
                                 ),
                               ),
                               if (mostrarPista)
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                  decoration: BoxDecoration(color: Colors.black.withOpacity(0.28), borderRadius: BorderRadius.circular(20)),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 4),
+                                  decoration: BoxDecoration(
+                                      color:
+                                          Colors.black.withValues(alpha: 0.28),
+                                      borderRadius: BorderRadius.circular(20)),
                                   child: const Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Icon(Icons.swipe, color: Colors.white70, size: 12),
+                                      Icon(Icons.swipe,
+                                          color: Colors.white70, size: 12),
                                       SizedBox(width: 4),
-                                      Text('Desliza', style: TextStyle(color: Colors.white70, fontSize: 10)),
+                                      Text('Desliza',
+                                          style: TextStyle(
+                                              color: Colors.white70,
+                                              fontSize: 10)),
                                     ],
                                   ),
                                 ),
@@ -106,9 +117,13 @@ class SwipeCard extends StatelessWidget {
                             bottom: 10,
                             right: 12,
                             child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                              decoration: BoxDecoration(color: Colors.black.withOpacity(0.45), borderRadius: BorderRadius.circular(20)),
-                              child: RatingBadge(calificacion: vendedor!.calificacionPromedio),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 4),
+                              decoration: BoxDecoration(
+                                  color: Colors.black.withValues(alpha: 0.45),
+                                  borderRadius: BorderRadius.circular(20)),
+                              child: RatingBadge(
+                                  calificacion: vendedor!.calificacionPromedio),
                             ),
                           ),
                       ],
@@ -117,7 +132,8 @@ class SwipeCard extends StatelessWidget {
                   Expanded(
                     flex: compacto ? 48 : 42,
                     child: Padding(
-                      padding: EdgeInsets.fromLTRB(16, compacto ? 8 : 12, 16, compacto ? 8 : 12),
+                      padding: EdgeInsets.fromLTRB(
+                          16, compacto ? 8 : 12, 16, compacto ? 8 : 12),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -129,21 +145,32 @@ class SwipeCard extends StatelessWidget {
                                 lote.nombre,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(fontSize: 19, fontWeight: FontWeight.bold, color: AppColors.coffeeDark),
+                                style: const TextStyle(
+                                    fontSize: 19,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.coffeeDark),
                               ),
                               const SizedBox(height: 2),
                               Text(
                                 vendedor?.nombreMarca ?? '',
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(fontSize: 13.5, color: Colors.grey.shade800),
+                                style: TextStyle(
+                                    fontSize: 13.5,
+                                    color: Colors.grey.shade800),
                               ),
                               const SizedBox(height: 2),
                               Text(
-                                [if (origen.isNotEmpty) origen, lote.varietyPrincipal, lote.proceso].join(' · '),
+                                [
+                                  if (origen.isNotEmpty) origen,
+                                  lote.varietyPrincipal,
+                                  lote.proceso
+                                ].join(' · '),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(fontSize: 12.5, color: Colors.grey.shade600),
+                                style: TextStyle(
+                                    fontSize: 12.5,
+                                    color: Colors.grey.shade600),
                               ),
                             ],
                           ),
@@ -151,13 +178,18 @@ class SwipeCard extends StatelessWidget {
                             children: [
                               Expanded(
                                 child: Text(
-                                  formatCOPPorUnidad(lote.precioCOP, lote.unidad),
+                                  formatCOPPorUnidad(
+                                      lote.precioCOP, lote.unidad),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: AppColors.coffeeDark),
+                                  style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w800,
+                                      color: AppColors.coffeeDark),
                                 ),
                               ),
-                              if (!compacto) AvailabilityChip(disponible: lote.disponible),
+                              if (!compacto)
+                                AvailabilityChip(disponible: lote.disponible),
                             ],
                           ),
                           SizedBox(
@@ -165,12 +197,15 @@ class SwipeCard extends StatelessWidget {
                             height: compacto ? 38 : 42,
                             child: ElevatedButton.icon(
                               onPressed: onVerPerfil,
-                              icon: const Icon(Icons.storefront_outlined, size: 18),
+                              icon: const Icon(Icons.storefront_outlined,
+                                  size: 18),
                               label: const Text('Ver perfil'),
                               style: ElevatedButton.styleFrom(
                                 minimumSize: const Size(0, 38),
-                                padding: const EdgeInsets.symmetric(horizontal: 12),
-                                textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 12),
+                                textStyle: const TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.bold),
                               ),
                             ),
                           ),
@@ -195,13 +230,19 @@ class _EtiquetaPreferencias extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-      decoration: BoxDecoration(color: AppColors.leafGreen.withOpacity(0.92), borderRadius: BorderRadius.circular(20)),
+      decoration: BoxDecoration(
+          color: AppColors.leafGreen.withValues(alpha: 0.92),
+          borderRadius: BorderRadius.circular(20)),
       child: const Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(Icons.tune, color: Colors.white, size: 12),
           SizedBox(width: 4),
-          Text('Coincide con tus preferencias', style: TextStyle(color: Colors.white, fontSize: 10.5, fontWeight: FontWeight.bold)),
+          Text('Coincide con tus preferencias',
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 10.5,
+                  fontWeight: FontWeight.bold)),
         ],
       ),
     );

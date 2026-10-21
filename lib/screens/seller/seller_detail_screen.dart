@@ -22,7 +22,8 @@ class SellerDetailScreen extends StatelessWidget {
   final String sellerId;
   final String? loteDestacadoId;
 
-  const SellerDetailScreen({super.key, required this.sellerId, this.loteDestacadoId});
+  const SellerDetailScreen(
+      {super.key, required this.sellerId, this.loteDestacadoId});
 
   @override
   Widget build(BuildContext context) {
@@ -31,17 +32,23 @@ class SellerDetailScreen extends StatelessWidget {
     final vendedor = store.perfilVendedorPorId(sellerId);
 
     if (vendedor == null) {
-      return const Scaffold(body: EmptyState(icono: Icons.error_outline, titulo: 'Vendedor no encontrado'));
+      return const Scaffold(
+          body: EmptyState(
+              icono: Icons.error_outline, titulo: 'Vendedor no encontrado'));
     }
 
-    final lotes = store.lotesDeVendedor(sellerId).where((l) => l.publicado).toList();
+    final lotes =
+        store.lotesDeVendedor(sellerId).where((l) => l.publicado).toList();
     final galeriaCompleta = [
       if (vendedor.fotoPrincipal != null) vendedor.fotoPrincipal!,
       ...vendedor.galeria,
     ];
     final esGuardado = session.usuario != null &&
         !session.esVendedor &&
-        store.esFavorito(compradorId: session.usuario!.uid, tipo: TipoFavorito.vendedor, refId: sellerId);
+        store.esFavorito(
+            compradorId: session.usuario!.uid,
+            tipo: TipoFavorito.vendedor,
+            refId: sellerId);
 
     return Scaffold(
       body: CustomScrollView(
@@ -53,17 +60,25 @@ class SellerDetailScreen extends StatelessWidget {
             actions: [
               if (session.usuario != null && !session.esVendedor)
                 IconButton(
-                  icon: Icon(esGuardado ? Icons.bookmark : Icons.bookmark_border, color: Colors.white),
+                  icon: Icon(
+                      esGuardado ? Icons.bookmark : Icons.bookmark_border,
+                      color: Colors.white),
                   tooltip: 'Guardar vendedor',
-                  onPressed: () => store.alternarFavorito(compradorId: session.usuario!.uid, tipo: TipoFavorito.vendedor, refId: sellerId),
+                  onPressed: () => store.alternarFavorito(
+                      compradorId: session.usuario!.uid,
+                      tipo: TipoFavorito.vendedor,
+                      refId: sellerId),
                 ),
             ],
             flexibleSpace: FlexibleSpaceBar(
               background: GestureDetector(
                 onTap: galeriaCompleta.isEmpty
                     ? null
-                    : () => FullscreenImageViewer.abrir(context, images: galeriaCompleta, initialIndex: 0),
-                child: _Cabecera(vendedor: vendedor, tieneGaleria: galeriaCompleta.isNotEmpty),
+                    : () => FullscreenImageViewer.abrir(context,
+                        images: galeriaCompleta, initialIndex: 0),
+                child: _Cabecera(
+                    vendedor: vendedor,
+                    tieneGaleria: galeriaCompleta.isNotEmpty),
               ),
             ),
           ),
@@ -74,25 +89,32 @@ class SellerDetailScreen extends StatelessWidget {
                 // ---------- NOMBRE + UBICACIÓN + VERIFICACIÓN + REPUTACIÓN ----------
                 Row(
                   children: [
-                    Expanded(child: Text(vendedor.nombreMarca, style: Theme.of(context).textTheme.headlineSmall)),
+                    Expanded(
+                        child: Text(vendedor.nombreMarca,
+                            style: Theme.of(context).textTheme.headlineSmall)),
                     if (vendedor.verificado) const VerifiedBadge(),
                   ],
                 ),
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    const Icon(Icons.location_on_outlined, size: 16, color: Colors.grey),
+                    const Icon(Icons.location_on_outlined,
+                        size: 16, color: Colors.grey),
                     const SizedBox(width: 4),
-                    Text(vendedor.ubicacionCorta, style: TextStyle(color: Colors.grey.shade700)),
+                    Text(vendedor.ubicacionCorta,
+                        style: TextStyle(color: Colors.grey.shade700)),
                     const SizedBox(width: 14),
-                    RatingBadge(calificacion: vendedor.calificacionPromedio, color: AppColors.coffeeDark),
+                    RatingBadge(
+                        calificacion: vendedor.calificacionPromedio,
+                        color: AppColors.coffeeDark),
                   ],
                 ),
 
                 // ---------- RESUMEN ----------
                 if (vendedor.descripcion.isNotEmpty) ...[
                   const SizedBox(height: 16),
-                  Text(vendedor.descripcion, style: const TextStyle(fontSize: 14.5, height: 1.4)),
+                  Text(vendedor.descripcion,
+                      style: const TextStyle(fontSize: 14.5, height: 1.4)),
                 ],
 
                 // ---------- CONFIANZA (sección 7) ----------
@@ -106,8 +128,10 @@ class SellerDetailScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       _seccion('Fotografías'),
-                      Text('${galeriaCompleta.length} foto${galeriaCompleta.length == 1 ? '' : 's'}',
-                          style: TextStyle(color: Colors.grey.shade500, fontSize: 12)),
+                      Text(
+                          '${galeriaCompleta.length} foto${galeriaCompleta.length == 1 ? '' : 's'}',
+                          style: TextStyle(
+                              color: Colors.grey.shade500, fontSize: 12)),
                     ],
                   ),
                   SizedBox(
@@ -132,7 +156,8 @@ class SellerDetailScreen extends StatelessWidget {
                 if (vendedor.historia.isNotEmpty) ...[
                   const SizedBox(height: 24),
                   _seccion('Sobre el productor'),
-                  Text(vendedor.historia, style: const TextStyle(fontSize: 14, height: 1.5)),
+                  Text(vendedor.historia,
+                      style: const TextStyle(fontSize: 14, height: 1.5)),
                 ],
 
                 // ---------- INFORMACIÓN DE PRODUCCIÓN ----------
@@ -141,18 +166,28 @@ class SellerDetailScreen extends StatelessWidget {
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: AppColors.coffeeLight)),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: AppColors.coffeeLight)),
                   child: Wrap(
                     runSpacing: 12,
                     children: [
                       if (vendedor.aniosProduciendo != null)
-                        _datoProductor(Icons.history, 'Años produciendo', '${vendedor.aniosProduciendo}'),
+                        _datoProductor(Icons.history, 'Años produciendo',
+                            '${vendedor.aniosProduciendo}'),
                       if (vendedor.tipoProduccion != null)
-                        _datoProductor(Icons.agriculture_outlined, 'Tipo de producción', vendedor.tipoProduccion!),
-                      _datoProductor(Icons.location_on_outlined, 'Ubicación', vendedor.ubicacionCorta),
-                      _datoProductor(Icons.coffee_outlined, 'Cafés publicados', '${lotes.length}'),
+                        _datoProductor(Icons.agriculture_outlined,
+                            'Tipo de producción', vendedor.tipoProduccion!),
+                      _datoProductor(Icons.location_on_outlined, 'Ubicación',
+                          vendedor.ubicacionCorta),
+                      _datoProductor(Icons.coffee_outlined, 'Cafés publicados',
+                          '${lotes.length}'),
                       if (vendedor.numOperaciones > 0)
-                        _datoProductor(Icons.handshake_outlined, 'Operaciones realizadas', '${vendedor.numOperaciones}'),
+                        _datoProductor(
+                            Icons.handshake_outlined,
+                            'Operaciones realizadas',
+                            '${vendedor.numOperaciones}'),
                     ],
                   ),
                 ),
@@ -161,11 +196,17 @@ class SellerDetailScreen extends StatelessWidget {
                 const SizedBox(height: 24),
                 _seccion('Cafés disponibles (${lotes.length})'),
                 if (lotes.isEmpty)
-                  const EmptyState(icono: Icons.coffee_outlined, titulo: 'Este vendedor no tiene cafés publicados por ahora')
+                  const EmptyState(
+                      icono: Icons.coffee_outlined,
+                      titulo:
+                          'Este vendedor no tiene cafés publicados por ahora')
                 else
                   ...lotes.map((lote) => CoffeeLotCard(
                         lote: lote,
-                        onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => CoffeeLotDetailScreen(coffeeLotId: lote.id))),
+                        onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (_) => CoffeeLotDetailScreen(
+                                    coffeeLotId: lote.id))),
                       )),
                 const SizedBox(height: 90),
               ]),
@@ -173,27 +214,34 @@ class SellerDetailScreen extends StatelessWidget {
           ),
         ],
       ),
-      bottomNavigationBar: (session.usuario != null && !session.esVendedor && lotes.isNotEmpty)
-          ? SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 10, 20, 14),
-                child: ElevatedButton.icon(
-                  icon: const Icon(Icons.handshake_outlined),
-                  label: const Text('Solicitar contacto'),
-                  onPressed: () {
-                    final lote = lotes.firstWhere((l) => l.id == loteDestacadoId, orElse: () => lotes.first);
-                    mostrarDialogoInteres(context: context, lote: lote, compradorId: session.usuario!.uid);
-                  },
-                ),
-              ),
-            )
-          : null,
+      bottomNavigationBar:
+          (session.usuario != null && !session.esVendedor && lotes.isNotEmpty)
+              ? SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 10, 20, 14),
+                    child: ElevatedButton.icon(
+                      icon: const Icon(Icons.handshake_outlined),
+                      label: const Text('Solicitar contacto'),
+                      onPressed: () {
+                        final lote = lotes.firstWhere(
+                            (l) => l.id == loteDestacadoId,
+                            orElse: () => lotes.first);
+                        mostrarDialogoInteres(
+                            context: context,
+                            lote: lote,
+                            compradorId: session.usuario!.uid);
+                      },
+                    ),
+                  ),
+                )
+              : null,
     );
   }
 
   Widget _seccion(String texto) => Padding(
         padding: const EdgeInsets.only(bottom: 10),
-        child: Text(texto, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+        child: Text(texto,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
       );
 
   Widget _datoProductor(IconData icono, String etiqueta, String valor) {
@@ -207,8 +255,12 @@ class SellerDetailScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(etiqueta, style: TextStyle(color: Colors.grey.shade600, fontSize: 11)),
-                Text(valor, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                Text(etiqueta,
+                    style:
+                        TextStyle(color: Colors.grey.shade600, fontSize: 11)),
+                Text(valor,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 13)),
               ],
             ),
           ),
@@ -241,7 +293,9 @@ class _SeccionConfianza extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(color: AppColors.leafGreenLight.withOpacity(0.12), borderRadius: BorderRadius.circular(14)),
+      decoration: BoxDecoration(
+          color: AppColors.leafGreenLight.withValues(alpha: 0.12),
+          borderRadius: BorderRadius.circular(14)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: indicadores
@@ -249,9 +303,12 @@ class _SeccionConfianza extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 3),
                   child: Row(
                     children: [
-                      const Icon(Icons.check_circle, size: 16, color: AppColors.leafGreen),
+                      const Icon(Icons.check_circle,
+                          size: 16, color: AppColors.leafGreen),
                       const SizedBox(width: 8),
-                      Expanded(child: Text(texto, style: const TextStyle(fontSize: 12.5))),
+                      Expanded(
+                          child: Text(texto,
+                              style: const TextStyle(fontSize: 12.5))),
                     ],
                   ),
                 ))
@@ -277,14 +334,19 @@ class _Cabecera extends StatelessWidget {
         else
           Container(
             color: AppColors.coffeeDark,
-            child: const Center(child: Icon(Icons.agriculture_outlined, color: Colors.white24, size: 72)),
+            child: const Center(
+                child: Icon(Icons.agriculture_outlined,
+                    color: Colors.white24, size: 72)),
           ),
         Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [Colors.black.withOpacity(0.1), Colors.black.withOpacity(0.55)],
+              colors: [
+                Colors.black.withValues(alpha: 0.1),
+                Colors.black.withValues(alpha: 0.55)
+              ],
             ),
           ),
         ),
@@ -294,13 +356,17 @@ class _Cabecera extends StatelessWidget {
             right: 14,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              decoration: BoxDecoration(color: Colors.black45, borderRadius: BorderRadius.circular(20)),
+              decoration: BoxDecoration(
+                  color: Colors.black45,
+                  borderRadius: BorderRadius.circular(20)),
               child: const Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.photo_library_outlined, color: Colors.white, size: 14),
+                  Icon(Icons.photo_library_outlined,
+                      color: Colors.white, size: 14),
                   SizedBox(width: 5),
-                  Text('Ver galería', style: TextStyle(color: Colors.white, fontSize: 11.5)),
+                  Text('Ver galería',
+                      style: TextStyle(color: Colors.white, fontSize: 11.5)),
                 ],
               ),
             ),

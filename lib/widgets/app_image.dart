@@ -63,7 +63,8 @@ class AppImage extends StatelessWidget {
       button: true,
       label: 'Ampliar fotografía',
       child: GestureDetector(
-        onTap: () => FullscreenImageViewer.abrir(context, images: imagenes, initialIndex: indiceEnGaleria),
+        onTap: () => FullscreenImageViewer.abrir(context,
+            images: imagenes, initialIndex: indiceEnGaleria),
         child: imagen,
       ),
     );
@@ -96,16 +97,23 @@ class AppImage extends StatelessWidget {
                 child: Container(
                   width: lado * 0.7,
                   height: lado * 0.7,
-                  decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white.withOpacity(0.12)),
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white.withValues(alpha: 0.12)),
                 ),
               ),
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(iconoPlaceholder, color: AppColors.coffeeMedium.withOpacity(cargando ? 0.35 : 0.6), size: (lado * 0.32).clamp(18.0, 56.0).toDouble()),
+                  Icon(iconoPlaceholder,
+                      color: AppColors.coffeeMedium
+                          .withValues(alpha: cargando ? 0.35 : 0.6),
+                      size: (lado * 0.32).clamp(18.0, 56.0).toDouble()),
                   if (grande && !cargando) ...[
                     const SizedBox(height: 6),
-                    const Text('Sin fotografía', style: TextStyle(color: AppColors.coffeeMedium, fontSize: 12)),
+                    const Text('Sin fotografía',
+                        style: TextStyle(
+                            color: AppColors.coffeeMedium, fontSize: 12)),
                   ],
                 ],
               ),

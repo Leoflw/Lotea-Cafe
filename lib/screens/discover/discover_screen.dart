@@ -37,7 +37,8 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
   ModoDescubrimiento _modo = ModoDescubrimiento.tarjetas;
   DiscoverFilters _filtros = const DiscoverFilters();
   List<CoffeeLot> _lotes = [];
-  int _versionMazo = 0; // cambia en cada recarga para reiniciar el CardSwiper limpio
+  int _versionMazo =
+      0; // cambia en cada recarga para reiniciar el CardSwiper limpio
   int _revisionCargada = -1;
   bool _inicializado = false;
   bool _pestanaActivaAnterior = true;
@@ -47,7 +48,8 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
     super.didChangeDependencies();
     if (!_inicializado) {
       _inicializado = true;
-      _lotes = _consultar(); // síncrono: el primer frame ya tiene datos (sin parpadeo de "vacío")
+      _lotes =
+          _consultar(); // síncrono: el primer frame ya tiene datos (sin parpadeo de "vacío")
     }
   }
 
@@ -69,7 +71,9 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
   /// Recarga solo si algo del catálogo cambió desde la última carga.
   void _recargarSiCambio() {
     if (!mounted) return;
-    if (context.read<MockStore>().catalogRevision != _revisionCargada) _recargar();
+    if (context.read<MockStore>().catalogRevision != _revisionCargada) {
+      _recargar();
+    }
   }
 
   Future<void> _abrirBusqueda() async {
@@ -102,20 +106,27 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
     liberarFoco();
     final elegido = await showModalBottomSheet<DiscoverSort>(
       context: context,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (context) => SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             const Padding(
               padding: EdgeInsets.fromLTRB(20, 16, 20, 4),
-              child: Align(alignment: Alignment.centerLeft, child: Text('Ordenar por', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16))),
+              child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('Ordenar por',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 16))),
             ),
             ...DiscoverSort.values.map((s) => RadioListTile<DiscoverSort>(
                   title: Text(s.label),
                   value: s,
+                  // ignore: deprecated_member_use
                   groupValue: _filtros.orden,
                   activeColor: AppColors.coffeeMedium,
+                  // ignore: deprecated_member_use
                   onChanged: (v) => Navigator.pop(context, v),
                 )),
           ],
@@ -131,7 +142,8 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
   }
 
   void _limpiarFiltros() {
-    _filtros = DiscoverFilters(busqueda: _filtros.busqueda, orden: _filtros.orden);
+    _filtros =
+        DiscoverFilters(busqueda: _filtros.busqueda, orden: _filtros.orden);
     _recargar();
   }
 
@@ -176,16 +188,23 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Encuentra tu próximo café', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 18)),
+                Text('Encuentra tu próximo café',
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleLarge
+                        ?.copyWith(fontSize: 18)),
                 const SizedBox(height: 1),
-                Text('Explora productores, origen y variedades.', style: TextStyle(color: Colors.grey.shade600, fontSize: 12.5)),
+                Text('Explora productores, origen y variedades.',
+                    style:
+                        TextStyle(color: Colors.grey.shade600, fontSize: 12.5)),
                 const SizedBox(height: 10),
                 Row(
                   children: [
                     Expanded(
                       child: _BotonControl(
                         icono: Icons.tune,
-                        etiqueta: nFiltros > 0 ? 'Filtrar · $nFiltros' : 'Filtrar',
+                        etiqueta:
+                            nFiltros > 0 ? 'Filtrar · $nFiltros' : 'Filtrar',
                         destacado: nFiltros > 0,
                         onTap: _abrirFiltros,
                       ),
@@ -210,19 +229,26 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                     children: [
                       if (hayBusqueda)
                         InputChip(
-                          label: Text('Búsqueda: ${_filtros.busqueda.trim()}', style: const TextStyle(fontSize: 12)),
+                          label: Text('Búsqueda: ${_filtros.busqueda.trim()}',
+                              style: const TextStyle(fontSize: 12)),
                           onDeleted: _limpiarBusqueda,
                           deleteButtonTooltipMessage: 'Quitar búsqueda',
                           visualDensity: VisualDensity.compact,
                           materialTapTargetSize: MaterialTapTargetSize.padded,
-                          backgroundColor: AppColors.coffeeLight.withOpacity(0.3),
+                          backgroundColor:
+                              AppColors.coffeeLight.withValues(alpha: 0.3),
                           side: BorderSide.none,
                         ),
                       if (nFiltros > 0)
                         TextButton(
                           onPressed: _limpiarFiltros,
-                          style: TextButton.styleFrom(minimumSize: const Size(48, 40), padding: const EdgeInsets.symmetric(horizontal: 6)),
-                          child: Text('$nFiltros ${nFiltros == 1 ? 'filtro activo' : 'filtros activos'} · Limpiar', style: const TextStyle(fontSize: 12)),
+                          style: TextButton.styleFrom(
+                              minimumSize: const Size(48, 40),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 6)),
+                          child: Text(
+                              '$nFiltros ${nFiltros == 1 ? 'filtro activo' : 'filtros activos'} · Limpiar',
+                              style: const TextStyle(fontSize: 12)),
                         ),
                     ],
                   ),
@@ -233,10 +259,13 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                     Expanded(
                       child: Text(
                         '${_lotes.length} ${_lotes.length == 1 ? 'café encontrado' : 'cafés encontrados'}',
-                        style: TextStyle(color: Colors.grey.shade700, fontSize: 12.5),
+                        style: TextStyle(
+                            color: Colors.grey.shade700, fontSize: 12.5),
                       ),
                     ),
-                    _SelectorModo(modo: _modo, onChanged: (m) => setState(() => _modo = m)),
+                    _SelectorModo(
+                        modo: _modo,
+                        onChanged: (m) => setState(() => _modo = m)),
                   ],
                 ),
               ],
@@ -258,7 +287,8 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                         ? SwipeModeView(
                             key: ValueKey('mazo_$_versionMazo'),
                             lotes: _lotes,
-                            onCambioLista: () => setState(() => _modo = ModoDescubrimiento.lista),
+                            onCambioLista: () => setState(
+                                () => _modo = ModoDescubrimiento.lista),
                             onRegresoDeDetalle: _recargarSiCambio,
                           )
                         : ListModeView(
@@ -282,7 +312,11 @@ class _BotonControl extends StatelessWidget {
   final bool destacado;
   final VoidCallback onTap;
 
-  const _BotonControl({required this.icono, required this.etiqueta, required this.destacado, required this.onTap});
+  const _BotonControl(
+      {required this.icono,
+      required this.etiqueta,
+      required this.destacado,
+      required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -290,12 +324,17 @@ class _BotonControl extends StatelessWidget {
     return OutlinedButton.icon(
       onPressed: onTap,
       icon: Icon(icono, size: 17, color: color),
-      label: Text(etiqueta, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: color)),
+      label: Text(etiqueta,
+          style: TextStyle(
+              fontSize: 13, fontWeight: FontWeight.w600, color: color)),
       style: OutlinedButton.styleFrom(
         minimumSize: const Size(0, 40),
         padding: const EdgeInsets.symmetric(horizontal: 12),
-        backgroundColor: destacado ? AppColors.coffeeLight.withOpacity(0.25) : Colors.white,
-        side: BorderSide(color: destacado ? AppColors.coffeeMedium : AppColors.coffeeLight),
+        backgroundColor: destacado
+            ? AppColors.coffeeLight.withValues(alpha: 0.25)
+            : Colors.white,
+        side: BorderSide(
+            color: destacado ? AppColors.coffeeMedium : AppColors.coffeeLight),
       ),
     );
   }
@@ -329,15 +368,21 @@ class _EstadoVacio extends StatelessWidget {
     if (hayFiltros) {
       titulo = 'No encontramos cafés con esos criterios';
       detalle = 'Prueba eliminando un filtro o cambia la búsqueda.';
-      acciones.add(_accion('Limpiar filtros', onLimpiarFiltros, principal: true));
-      if (hayBusqueda) acciones.add(_accion('Limpiar búsqueda', onLimpiarBusqueda));
+      acciones
+          .add(_accion('Limpiar filtros', onLimpiarFiltros, principal: true));
+      if (hayBusqueda) {
+        acciones.add(_accion('Limpiar búsqueda', onLimpiarBusqueda));
+      }
     } else if (hayBusqueda) {
       titulo = 'Sin resultados para “$consulta”';
-      detalle = 'Revisa la ortografía o prueba con otra variedad, finca o región.';
-      acciones.add(_accion('Limpiar búsqueda', onLimpiarBusqueda, principal: true));
+      detalle =
+          'Revisa la ortografía o prueba con otra variedad, finca o región.';
+      acciones
+          .add(_accion('Limpiar búsqueda', onLimpiarBusqueda, principal: true));
     } else {
       titulo = 'Ya viste todos los cafés disponibles';
-      detalle = 'Los vendedores publican lotes nuevos con frecuencia. Mientras tanto, revisa los que guardaste.';
+      detalle =
+          'Los vendedores publican lotes nuevos con frecuencia. Mientras tanto, revisa los que guardaste.';
       acciones.add(_accion('Ver guardados', onVerGuardados, principal: true));
     }
 
@@ -347,11 +392,17 @@ class _EstadoVacio extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.coffee_outlined, size: 52, color: AppColors.coffeeLight),
+            const Icon(Icons.coffee_outlined,
+                size: 52, color: AppColors.coffeeLight),
             const SizedBox(height: 14),
-            Text(titulo, textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15.5)),
+            Text(titulo,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold, fontSize: 15.5)),
             const SizedBox(height: 6),
-            Text(detalle, textAlign: TextAlign.center, style: TextStyle(color: Colors.grey.shade600, fontSize: 13)),
+            Text(detalle,
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.grey.shade600, fontSize: 13)),
             const SizedBox(height: 16),
             ...acciones,
           ],
@@ -364,8 +415,14 @@ class _EstadoVacio extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: principal
-          ? ElevatedButton(style: ElevatedButton.styleFrom(minimumSize: const Size(200, 44)), onPressed: onTap, child: Text(texto))
-          : OutlinedButton(style: OutlinedButton.styleFrom(minimumSize: const Size(200, 44)), onPressed: onTap, child: Text(texto)),
+          ? ElevatedButton(
+              style: ElevatedButton.styleFrom(minimumSize: const Size(200, 44)),
+              onPressed: onTap,
+              child: Text(texto))
+          : OutlinedButton(
+              style: OutlinedButton.styleFrom(minimumSize: const Size(200, 44)),
+              onPressed: onTap,
+              child: Text(texto)),
     );
   }
 }
@@ -390,7 +447,8 @@ class _SelectorModo extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _opcion(ModoDescubrimiento.tarjetas, Icons.style_outlined, 'Tarjetas'),
+          _opcion(
+              ModoDescubrimiento.tarjetas, Icons.style_outlined, 'Tarjetas'),
           _opcion(ModoDescubrimiento.lista, Icons.view_list_outlined, 'Lista'),
         ],
       ),
@@ -410,13 +468,21 @@ class _SelectorModo extends StatelessWidget {
           duration: const Duration(milliseconds: 160),
           padding: const EdgeInsets.symmetric(horizontal: 10),
           alignment: Alignment.center,
-          decoration: BoxDecoration(color: activo ? AppColors.coffeeMedium : Colors.transparent, borderRadius: BorderRadius.circular(9)),
+          decoration: BoxDecoration(
+              color: activo ? AppColors.coffeeMedium : Colors.transparent,
+              borderRadius: BorderRadius.circular(9)),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(icono, size: 15, color: activo ? Colors.white : AppColors.coffeeDark),
+              Icon(icono,
+                  size: 15,
+                  color: activo ? Colors.white : AppColors.coffeeDark),
               const SizedBox(width: 4),
-              Text(texto, style: TextStyle(color: activo ? Colors.white : AppColors.coffeeDark, fontWeight: FontWeight.w600, fontSize: 12)),
+              Text(texto,
+                  style: TextStyle(
+                      color: activo ? Colors.white : AppColors.coffeeDark,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 12)),
             ],
           ),
         ),

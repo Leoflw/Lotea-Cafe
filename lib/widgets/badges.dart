@@ -10,7 +10,8 @@ class VerifiedBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: compacto ? 8 : 10, vertical: compacto ? 3 : 5),
+      padding: EdgeInsets.symmetric(
+          horizontal: compacto ? 8 : 10, vertical: compacto ? 3 : 5),
       decoration: BoxDecoration(
         color: AppColors.leafGreen,
         borderRadius: BorderRadius.circular(20),
@@ -44,7 +45,7 @@ class CertificationChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
-        color: AppColors.leafGreenLight.withOpacity(0.18),
+        color: AppColors.leafGreenLight.withValues(alpha: 0.18),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: AppColors.leafGreenLight),
       ),
@@ -53,7 +54,8 @@ class CertificationChip extends StatelessWidget {
         children: [
           const Icon(Icons.eco_outlined, size: 14, color: AppColors.leafGreen),
           const SizedBox(width: 4),
-          Text(texto, style: const TextStyle(color: AppColors.leafGreen, fontSize: 12)),
+          Text(texto,
+              style: const TextStyle(color: AppColors.leafGreen, fontSize: 12)),
         ],
       ),
     );
@@ -64,7 +66,8 @@ class CertificationChip extends StatelessWidget {
 class RatingBadge extends StatelessWidget {
   final double calificacion;
   final Color color;
-  const RatingBadge({super.key, required this.calificacion, this.color = Colors.white});
+  const RatingBadge(
+      {super.key, required this.calificacion, this.color = Colors.white});
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +77,8 @@ class RatingBadge extends StatelessWidget {
       children: [
         const Icon(Icons.star, color: Colors.amber, size: 16),
         const SizedBox(width: 2),
-        Text(calificacion.toStringAsFixed(1), style: TextStyle(color: color, fontSize: 13)),
+        Text(calificacion.toStringAsFixed(1),
+            style: TextStyle(color: color, fontSize: 13)),
       ],
     );
   }
@@ -91,12 +95,13 @@ class AvailabilityChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.14),
+        color: color.withValues(alpha: 0.14),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
         disponible ? 'Disponible' : 'Agotado',
-        style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.bold),
+        style:
+            TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.bold),
       ),
     );
   }

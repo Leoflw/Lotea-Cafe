@@ -25,13 +25,18 @@ class CoffeeLotDetailScreen extends StatelessWidget {
     final lote = store.lotePorId(coffeeLotId);
 
     if (lote == null) {
-      return const Scaffold(body: EmptyState(icono: Icons.error_outline, titulo: 'Café no encontrado'));
+      return const Scaffold(
+          body: EmptyState(
+              icono: Icons.error_outline, titulo: 'Café no encontrado'));
     }
 
     final vendedor = store.perfilVendedorPorId(lote.sellerId);
     final esGuardado = session.usuario != null &&
         !session.esVendedor &&
-        store.esFavorito(compradorId: session.usuario!.uid, tipo: TipoFavorito.cafe, refId: lote.id);
+        store.esFavorito(
+            compradorId: session.usuario!.uid,
+            tipo: TipoFavorito.cafe,
+            refId: lote.id);
 
     return Scaffold(
       appBar: AppBar(
@@ -41,7 +46,10 @@ class CoffeeLotDetailScreen extends StatelessWidget {
             IconButton(
               icon: Icon(esGuardado ? Icons.bookmark : Icons.bookmark_border),
               tooltip: 'Guardar café',
-              onPressed: () => store.alternarFavorito(compradorId: session.usuario!.uid, tipo: TipoFavorito.cafe, refId: lote.id),
+              onPressed: () => store.alternarFavorito(
+                  compradorId: session.usuario!.uid,
+                  tipo: TipoFavorito.cafe,
+                  refId: lote.id),
             ),
         ],
       ),
@@ -57,23 +65,32 @@ class CoffeeLotDetailScreen extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Expanded(child: Text(lote.nombre, style: Theme.of(context).textTheme.headlineSmall)),
+                    Expanded(
+                        child: Text(lote.nombre,
+                            style: Theme.of(context).textTheme.headlineSmall)),
                     AvailabilityChip(disponible: lote.disponible),
                   ],
                 ),
                 const SizedBox(height: 6),
                 if (vendedor != null)
                   InkWell(
-                    onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => SellerDetailScreen(sellerId: vendedor.id))),
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) =>
+                            SellerDetailScreen(sellerId: vendedor.id))),
                     child: Row(
                       children: [
-                        const Icon(Icons.storefront_outlined, size: 16, color: AppColors.coffeeMedium),
+                        const Icon(Icons.storefront_outlined,
+                            size: 16, color: AppColors.coffeeMedium),
                         const SizedBox(width: 4),
-                        Text('${vendedor.nombreMarca} · ${vendedor.ubicacionCorta}',
-                            style: const TextStyle(color: AppColors.coffeeMedium, fontWeight: FontWeight.w600)),
+                        Text(
+                            '${vendedor.nombreMarca} · ${vendedor.ubicacionCorta}',
+                            style: const TextStyle(
+                                color: AppColors.coffeeMedium,
+                                fontWeight: FontWeight.w600)),
                         if (vendedor.verificado) ...[
                           const SizedBox(width: 6),
-                          const Icon(Icons.verified, size: 15, color: AppColors.leafGreen),
+                          const Icon(Icons.verified,
+                              size: 15, color: AppColors.leafGreen),
                         ],
                       ],
                     ),
@@ -93,7 +110,10 @@ class CoffeeLotDetailScreen extends StatelessWidget {
                     children: [
                       Text(
                         formatCOPPorUnidad(lote.precioCOP, lote.unidad),
-                        style: const TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 26,
+                            fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 8),
                       Wrap(
@@ -101,9 +121,11 @@ class CoffeeLotDetailScreen extends StatelessWidget {
                         runSpacing: 6,
                         children: [
                           if (lote.pedidoMinimoKg != null)
-                            _datoClaro('Pedido mínimo', '${lote.pedidoMinimoKg!.toStringAsFixed(0)} kg'),
+                            _datoClaro('Pedido mínimo',
+                                '${lote.pedidoMinimoKg!.toStringAsFixed(0)} kg'),
                           if (lote.cantidadDisponibleKg != null)
-                            _datoClaro('Disponible', '${lote.cantidadDisponibleKg!.toStringAsFixed(0)} kg'),
+                            _datoClaro('Disponible',
+                                '${lote.cantidadDisponibleKg!.toStringAsFixed(0)} kg'),
                           _datoClaro('Presentación', lote.unidad),
                         ],
                       ),
@@ -113,7 +135,8 @@ class CoffeeLotDetailScreen extends StatelessWidget {
 
                 if (lote.descripcion.isNotEmpty) ...[
                   const SizedBox(height: 20),
-                  Text(lote.descripcion, style: const TextStyle(fontSize: 14.5, height: 1.4)),
+                  Text(lote.descripcion,
+                      style: const TextStyle(fontSize: 14.5, height: 1.4)),
                 ],
 
                 // ---------- CARACTERÍSTICAS ----------
@@ -125,10 +148,17 @@ class CoffeeLotDetailScreen extends StatelessWidget {
                   children: [
                     _specChip(Icons.eco_outlined, lote.varietyPrincipal),
                     _specChip(Icons.water_drop_outlined, lote.proceso),
-                    if (lote.altitudMsnm != null) _specChip(Icons.terrain_outlined, '${lote.altitudMsnm!.toStringAsFixed(0)} msnm'),
-                    if (lote.cosecha != null) _specChip(Icons.calendar_today_outlined, 'Cosecha ${lote.cosecha}'),
-                    if (lote.puntajeTaza != null) _specChip(Icons.star_outline, '${lote.puntajeTaza!.toStringAsFixed(1)} pts'),
-                    if (lote.tipoCafe != null) _specChip(Icons.category_outlined, lote.tipoCafe!),
+                    if (lote.altitudMsnm != null)
+                      _specChip(Icons.terrain_outlined,
+                          '${lote.altitudMsnm!.toStringAsFixed(0)} msnm'),
+                    if (lote.cosecha != null)
+                      _specChip(Icons.calendar_today_outlined,
+                          'Cosecha ${lote.cosecha}'),
+                    if (lote.puntajeTaza != null)
+                      _specChip(Icons.star_outline,
+                          '${lote.puntajeTaza!.toStringAsFixed(1)} pts'),
+                    if (lote.tipoCafe != null)
+                      _specChip(Icons.category_outlined, lote.tipoCafe!),
                   ],
                 ),
 
@@ -142,12 +172,17 @@ class CoffeeLotDetailScreen extends StatelessWidget {
                       child: Wrap(
                         spacing: 8,
                         runSpacing: 8,
-                        children: lote.perfilSensorial.notas.map((n) => _notaChip(n)).toList(),
+                        children: lote.perfilSensorial.notas
+                            .map((n) => _notaChip(n))
+                            .toList(),
                       ),
                     ),
-                  if (lote.perfilSensorial.acidez != null) _barraSensorial('Acidez', lote.perfilSensorial.acidez!),
-                  if (lote.perfilSensorial.cuerpo != null) _barraSensorial('Cuerpo', lote.perfilSensorial.cuerpo!),
-                  if (lote.perfilSensorial.dulzor != null) _barraSensorial('Dulzor', lote.perfilSensorial.dulzor!),
+                  if (lote.perfilSensorial.acidez != null)
+                    _barraSensorial('Acidez', lote.perfilSensorial.acidez!),
+                  if (lote.perfilSensorial.cuerpo != null)
+                    _barraSensorial('Cuerpo', lote.perfilSensorial.cuerpo!),
+                  if (lote.perfilSensorial.dulzor != null)
+                    _barraSensorial('Dulzor', lote.perfilSensorial.dulzor!),
                 ],
 
                 // ---------- ORIGEN ----------
@@ -164,12 +199,18 @@ class CoffeeLotDetailScreen extends StatelessWidget {
                     ),
                     child: Column(
                       children: [
-                        _filaOrigen(Icons.landscape_outlined, 'Finca', vendedor.fincaPrincipal),
-                        if (vendedor.municipio.isNotEmpty) _filaOrigen(Icons.location_city_outlined, 'Municipio', vendedor.municipio),
-                        _filaOrigen(Icons.map_outlined, 'Departamento', vendedor.departamento),
+                        _filaOrigen(Icons.landscape_outlined, 'Finca',
+                            vendedor.fincaPrincipal),
+                        if (vendedor.municipio.isNotEmpty)
+                          _filaOrigen(Icons.location_city_outlined, 'Municipio',
+                              vendedor.municipio),
+                        _filaOrigen(Icons.map_outlined, 'Departamento',
+                            vendedor.departamento),
                         _filaOrigen(Icons.public_outlined, 'País', 'Colombia'),
                         if (lote.altitudMsnm != null)
-                          _filaOrigen(Icons.terrain_outlined, 'Altitud', '${lote.altitudMsnm!.toStringAsFixed(0)} msnm', ultimo: true),
+                          _filaOrigen(Icons.terrain_outlined, 'Altitud',
+                              '${lote.altitudMsnm!.toStringAsFixed(0)} msnm',
+                              ultimo: true),
                       ],
                     ),
                   ),
@@ -178,13 +219,23 @@ class CoffeeLotDetailScreen extends StatelessWidget {
                 if (lote.metodosEnvio.isNotEmpty) ...[
                   const SizedBox(height: 24),
                   _seccion('Métodos de envío'),
-                  Wrap(spacing: 8, children: lote.metodosEnvio.map((m) => Chip(label: Text(m), backgroundColor: Colors.white)).toList()),
+                  Wrap(
+                      spacing: 8,
+                      children: lote.metodosEnvio
+                          .map((m) => Chip(
+                              label: Text(m), backgroundColor: Colors.white))
+                          .toList()),
                 ],
 
                 if (lote.certificaciones.isNotEmpty) ...[
                   const SizedBox(height: 24),
                   _seccion('Certificaciones'),
-                  Wrap(spacing: 8, runSpacing: 8, children: lote.certificaciones.map((c) => CertificationChip(texto: c)).toList()),
+                  Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: lote.certificaciones
+                          .map((c) => CertificationChip(texto: c))
+                          .toList()),
                 ],
               ],
             ),
@@ -198,7 +249,10 @@ class CoffeeLotDetailScreen extends StatelessWidget {
                 child: ElevatedButton.icon(
                   icon: const Icon(Icons.handshake_outlined),
                   label: const Text('Solicitar contacto — Me interesa'),
-                  onPressed: () => mostrarDialogoInteres(context: context, lote: lote, compradorId: session.usuario!.uid),
+                  onPressed: () => mostrarDialogoInteres(
+                      context: context,
+                      lote: lote,
+                      compradorId: session.usuario!.uid),
                 ),
               ),
             )
@@ -208,15 +262,21 @@ class CoffeeLotDetailScreen extends StatelessWidget {
 
   Widget _seccion(String texto) => Padding(
         padding: const EdgeInsets.only(bottom: 10),
-        child: Text(texto, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+        child: Text(texto,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
       );
 
   Widget _datoClaro(String etiqueta, String valor) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(etiqueta, style: const TextStyle(color: Colors.white60, fontSize: 11)),
-        Text(valor, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
+        Text(etiqueta,
+            style: const TextStyle(color: Colors.white60, fontSize: 11)),
+        Text(valor,
+            style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 13)),
       ],
     );
   }
@@ -224,13 +284,20 @@ class CoffeeLotDetailScreen extends StatelessWidget {
   Widget _specChip(IconData icono, String texto) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14), border: Border.all(color: AppColors.coffeeLight)),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: AppColors.coffeeLight)),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icono, size: 15, color: AppColors.coffeeMedium),
           const SizedBox(width: 6),
-          Text(texto, style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600, color: AppColors.coffeeDark)),
+          Text(texto,
+              style: const TextStyle(
+                  fontSize: 12.5,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.coffeeDark)),
         ],
       ),
     );
@@ -238,8 +305,11 @@ class CoffeeLotDetailScreen extends StatelessWidget {
 
   Widget _notaChip(String texto) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        decoration: BoxDecoration(color: AppColors.coffeeLight.withOpacity(0.3), borderRadius: BorderRadius.circular(20)),
-        child: Text(texto, style: const TextStyle(fontSize: 12, color: AppColors.coffeeDark)),
+        decoration: BoxDecoration(
+            color: AppColors.coffeeLight.withValues(alpha: 0.3),
+            borderRadius: BorderRadius.circular(20)),
+        child: Text(texto,
+            style: const TextStyle(fontSize: 12, color: AppColors.coffeeDark)),
       );
 
   Widget _barraSensorial(String etiqueta, String nivel) {
@@ -248,34 +318,47 @@ class CoffeeLotDetailScreen extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
         children: [
-          SizedBox(width: 64, child: Text(etiqueta, style: const TextStyle(fontSize: 13))),
+          SizedBox(
+              width: 64,
+              child: Text(etiqueta, style: const TextStyle(fontSize: 13))),
           Expanded(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: LinearProgressIndicator(
                 value: fraccion,
                 minHeight: 10,
-                backgroundColor: AppColors.coffeeLight.withOpacity(0.35),
+                backgroundColor: AppColors.coffeeLight.withValues(alpha: 0.35),
                 valueColor: const AlwaysStoppedAnimation(AppColors.leafGreen),
               ),
             ),
           ),
           const SizedBox(width: 10),
-          SizedBox(width: 48, child: Text(nivel, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
+          SizedBox(
+              width: 48,
+              child: Text(nivel,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 12))),
         ],
       ),
     );
   }
 
-  Widget _filaOrigen(IconData icono, String etiqueta, String valor, {bool ultimo = false}) {
+  Widget _filaOrigen(IconData icono, String etiqueta, String valor,
+      {bool ultimo = false}) {
     return Padding(
       padding: EdgeInsets.only(bottom: ultimo ? 0 : 10),
       child: Row(
         children: [
           Icon(icono, size: 17, color: AppColors.coffeeMedium),
           const SizedBox(width: 10),
-          SizedBox(width: 110, child: Text(etiqueta, style: TextStyle(color: Colors.grey.shade600, fontSize: 13))),
-          Expanded(child: Text(valor, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13.5))),
+          SizedBox(
+              width: 110,
+              child: Text(etiqueta,
+                  style: TextStyle(color: Colors.grey.shade600, fontSize: 13))),
+          Expanded(
+              child: Text(valor,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w600, fontSize: 13.5))),
         ],
       ),
     );
@@ -331,9 +414,14 @@ class _GaleriaState extends State<_Galeria> {
                   bottom: 10,
                   right: 14,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(color: Colors.black45, borderRadius: BorderRadius.circular(20)),
-                    child: Text('${_indice + 1} / ${widget.fotos.length}', style: const TextStyle(color: Colors.white, fontSize: 11)),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(
+                        color: Colors.black45,
+                        borderRadius: BorderRadius.circular(20)),
+                    child: Text('${_indice + 1} / ${widget.fotos.length}',
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 11)),
                   ),
                 ),
             ],
@@ -352,11 +440,17 @@ class _GaleriaState extends State<_Galeria> {
                 itemBuilder: (context, i) {
                   final activo = i == _indice;
                   return GestureDetector(
-                    onTap: () => _controller.animateToPage(i, duration: const Duration(milliseconds: 220), curve: Curves.easeOut),
+                    onTap: () => _controller.animateToPage(i,
+                        duration: const Duration(milliseconds: 220),
+                        curve: Curves.easeOut),
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: activo ? AppColors.coffeeMedium : Colors.transparent, width: 2),
+                        border: Border.all(
+                            color: activo
+                                ? AppColors.coffeeMedium
+                                : Colors.transparent,
+                            width: 2),
                       ),
                       child: AppImage(
                         path: widget.fotos[i],

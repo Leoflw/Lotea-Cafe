@@ -15,7 +15,8 @@ class CoffeeLotEditScreen extends StatefulWidget {
   final String sellerId;
   final CoffeeLot? loteExistente;
 
-  const CoffeeLotEditScreen({super.key, required this.sellerId, this.loteExistente});
+  const CoffeeLotEditScreen(
+      {super.key, required this.sellerId, this.loteExistente});
 
   @override
   State<CoffeeLotEditScreen> createState() => _CoffeeLotEditScreenState();
@@ -48,9 +49,20 @@ class _CoffeeLotEditScreenState extends State<CoffeeLotEditScreen> {
   bool _disponible = true;
 
   static const notasCataDisponibles = [
-    'Cítrico', 'Floral', 'Frutos rojos', 'Panela', 'Chocolate', 'Miel', 'Fermentado dulce', 'Nuez',
+    'Cítrico',
+    'Floral',
+    'Frutos rojos',
+    'Panela',
+    'Chocolate',
+    'Miel',
+    'Fermentado dulce',
+    'Nuez',
   ];
-  static const metodosEnvioDisponibles = ['Envío nacional', 'Envío internacional', 'Recogida en finca'];
+  static const metodosEnvioDisponibles = [
+    'Envío nacional',
+    'Envío internacional',
+    'Recogida en finca'
+  ];
 
   bool get _editando => widget.loteExistente != null;
 
@@ -97,7 +109,9 @@ class _CoffeeLotEditScreenState extends State<CoffeeLotEditScreen> {
 
   Future<void> _agregarFotos() async {
     final archivos = await _picker.pickMultiImage(imageQuality: 80);
-    if (archivos.isNotEmpty) setState(() => _fotos.addAll(archivos.map((x) => x.path)));
+    if (archivos.isNotEmpty) {
+      setState(() => _fotos.addAll(archivos.map((x) => x.path)));
+    }
   }
 
   void _guardar({required bool publicar}) {
@@ -109,7 +123,8 @@ class _CoffeeLotEditScreenState extends State<CoffeeLotEditScreen> {
 
     final store = context.read<MockStore>();
     final lote = CoffeeLot(
-      id: widget.loteExistente?.id ?? DateTime.now().microsecondsSinceEpoch.toString(),
+      id: widget.loteExistente?.id ??
+          DateTime.now().microsecondsSinceEpoch.toString(),
       sellerId: widget.sellerId,
       nombre: _nombreCtrl.text.trim(),
       variedades: List.from(_variedadesSel),
@@ -117,7 +132,8 @@ class _CoffeeLotEditScreenState extends State<CoffeeLotEditScreen> {
       tipoCafe: _tipoCafeSel,
       altitudMsnm: double.tryParse(_altitudCtrl.text.trim()),
       puntajeTaza: double.tryParse(_puntajeCtrl.text.trim()),
-      cosecha: _cosechaCtrl.text.trim().isEmpty ? null : _cosechaCtrl.text.trim(),
+      cosecha:
+          _cosechaCtrl.text.trim().isEmpty ? null : _cosechaCtrl.text.trim(),
       perfilSensorial: TasteProfile(
         notas: List.from(_notasCataSel),
         acidez: _acidezSel,
@@ -140,7 +156,8 @@ class _CoffeeLotEditScreenState extends State<CoffeeLotEditScreen> {
     store.guardarLote(lote);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(publicar ? 'Café publicado en el catálogo.' : 'Borrador guardado.'),
+        content: Text(
+            publicar ? 'Café publicado en el catálogo.' : 'Borrador guardado.'),
         backgroundColor: AppColors.leafGreen,
       ),
     );
@@ -149,229 +166,254 @@ class _CoffeeLotEditScreenState extends State<CoffeeLotEditScreen> {
   }
 
   void _error(String msg) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(msg), backgroundColor: AppColors.danger));
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(msg), backgroundColor: AppColors.danger));
   }
 
   @override
   Widget build(BuildContext context) {
     return DismissKeyboard(
       child: Scaffold(
-      appBar: AppBar(title: Text(_editando ? 'Editar café' : 'Nuevo café')),
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(20),
-          children: [
-            _seccionMayor('Fotografías'),
-            _label('Fotos del lote'),
-            _galeriaFotos(),
-            const SizedBox(height: 8),
-            OutlinedButton.icon(
-              onPressed: _agregarFotos,
-              icon: const Icon(Icons.add_photo_alternate_outlined),
-              label: const Text('Agregar fotos'),
-            ),
-            const SizedBox(height: 24),
-            _seccionMayor('Identidad'),
-            _label('Nombre del café'),
-            TextFormField(
-              controller: _nombreCtrl,
-              decoration: const InputDecoration(hintText: 'Ej: Caturra Lavado'),
-              validator: (v) => (v == null || v.trim().isEmpty) ? 'Requerido' : null,
-            ),
-            const SizedBox(height: 24),
-            _seccionMayor('Proceso y calidad'),
-            _label('Variedad'),
-            _chips(variedadesDisponibles, _variedadesSel),
-            const SizedBox(height: 20),
-            _label('Proceso'),
-            Wrap(
-              spacing: 8,
-              children: procesosDisponibles.map((p) {
-                final activo = _procesoSel == p;
-                return ChoiceChip(
-                  label: Text(p),
-                  selected: activo,
-                  selectedColor: AppColors.leafGreen,
-                  labelStyle: TextStyle(color: activo ? Colors.white : AppColors.coffeeDark),
-                  onSelected: (_) => setState(() => _procesoSel = p),
-                );
-              }).toList(),
-            ),
-            const SizedBox(height: 20),
-            _label('Tipo de café — opcional'),
-            Wrap(
-              spacing: 8,
-              children: tiposCafeDisponibles.map((t) {
-                final activo = _tipoCafeSel == t;
-                return ChoiceChip(
-                  label: Text(t),
-                  selected: activo,
-                  selectedColor: AppColors.coffeeMedium,
-                  labelStyle: TextStyle(color: activo ? Colors.white : AppColors.coffeeDark),
-                  onSelected: (sel) => setState(() => _tipoCafeSel = sel ? t : null),
-                );
-              }).toList(),
-            ),
-            const SizedBox(height: 24),
-            _seccionMayor('Venta'),
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _label('Precio (COP)'),
-                      TextFormField(
-                        controller: _precioCtrl,
-                        keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(hintText: 'Ej: 32000'),
-                        validator: (v) {
-                          final n = double.tryParse(v ?? '');
-                          return (n == null || n <= 0) ? 'Precio inválido' : null;
-                        },
-                      ),
-                    ],
+        appBar: AppBar(title: Text(_editando ? 'Editar café' : 'Nuevo café')),
+        body: Form(
+          key: _formKey,
+          child: ListView(
+            padding: const EdgeInsets.all(20),
+            children: [
+              _seccionMayor('Fotografías'),
+              _label('Fotos del lote'),
+              _galeriaFotos(),
+              const SizedBox(height: 8),
+              OutlinedButton.icon(
+                onPressed: _agregarFotos,
+                icon: const Icon(Icons.add_photo_alternate_outlined),
+                label: const Text('Agregar fotos'),
+              ),
+              const SizedBox(height: 24),
+              _seccionMayor('Identidad'),
+              _label('Nombre del café'),
+              TextFormField(
+                controller: _nombreCtrl,
+                decoration:
+                    const InputDecoration(hintText: 'Ej: Caturra Lavado'),
+                validator: (v) =>
+                    (v == null || v.trim().isEmpty) ? 'Requerido' : null,
+              ),
+              const SizedBox(height: 24),
+              _seccionMayor('Proceso y calidad'),
+              _label('Variedad'),
+              _chips(variedadesDisponibles, _variedadesSel),
+              const SizedBox(height: 20),
+              _label('Proceso'),
+              Wrap(
+                spacing: 8,
+                children: procesosDisponibles.map((p) {
+                  final activo = _procesoSel == p;
+                  return ChoiceChip(
+                    label: Text(p),
+                    selected: activo,
+                    selectedColor: AppColors.leafGreen,
+                    labelStyle: TextStyle(
+                        color: activo ? Colors.white : AppColors.coffeeDark),
+                    onSelected: (_) => setState(() => _procesoSel = p),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 20),
+              _label('Tipo de café — opcional'),
+              Wrap(
+                spacing: 8,
+                children: tiposCafeDisponibles.map((t) {
+                  final activo = _tipoCafeSel == t;
+                  return ChoiceChip(
+                    label: Text(t),
+                    selected: activo,
+                    selectedColor: AppColors.coffeeMedium,
+                    labelStyle: TextStyle(
+                        color: activo ? Colors.white : AppColors.coffeeDark),
+                    onSelected: (sel) =>
+                        setState(() => _tipoCafeSel = sel ? t : null),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 24),
+              _seccionMayor('Venta'),
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _label('Precio (COP)'),
+                        TextFormField(
+                          controller: _precioCtrl,
+                          keyboardType: TextInputType.number,
+                          decoration:
+                              const InputDecoration(hintText: 'Ej: 32000'),
+                          validator: (v) {
+                            final n = double.tryParse(v ?? '');
+                            return (n == null || n <= 0)
+                                ? 'Precio inválido'
+                                : null;
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _label('Unidad'),
-                      DropdownButtonFormField<String>(
-                        initialValue: _unidadSel,
-                        items: unidadesDisponibles
-                            .map((u) => DropdownMenuItem(value: u, child: Text(u)))
-                            .toList(),
-                        onChanged: (v) => setState(() => _unidadSel = v!),
-                      ),
-                    ],
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _label('Unidad'),
+                        DropdownButtonFormField<String>(
+                          initialValue: _unidadSel,
+                          items: unidadesDisponibles
+                              .map((u) =>
+                                  DropdownMenuItem(value: u, child: Text(u)))
+                              .toList(),
+                          onChanged: (v) => setState(() => _unidadSel = v!),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _label('Disponible (kg) — opcional'),
-                      TextFormField(
-                        controller: _cantidadCtrl,
-                        keyboardType: TextInputType.number,
-                        validator: (v) {
-                          if (v == null || v.trim().isEmpty) return null;
-                          final n = double.tryParse(v.trim());
-                          return (n == null || n <= 0) ? 'Debe ser mayor a 0' : null;
-                        },
-                      ),
-                    ],
+                ],
+              ),
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _label('Disponible (kg) — opcional'),
+                        TextFormField(
+                          controller: _cantidadCtrl,
+                          keyboardType: TextInputType.number,
+                          validator: (v) {
+                            if (v == null || v.trim().isEmpty) return null;
+                            final n = double.tryParse(v.trim());
+                            return (n == null || n <= 0)
+                                ? 'Debe ser mayor a 0'
+                                : null;
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _label('Pedido mínimo (kg) — opcional'),
-                      TextFormField(
-                        controller: _pedidoMinCtrl,
-                        keyboardType: TextInputType.number,
-                        validator: (v) {
-                          if (v == null || v.trim().isEmpty) return null;
-                          final n = double.tryParse(v.trim());
-                          return (n == null || n < 0) ? 'Valor inválido' : null;
-                        },
-                      ),
-                    ],
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _label('Pedido mínimo (kg) — opcional'),
+                        TextFormField(
+                          controller: _pedidoMinCtrl,
+                          keyboardType: TextInputType.number,
+                          validator: (v) {
+                            if (v == null || v.trim().isEmpty) return null;
+                            final n = double.tryParse(v.trim());
+                            return (n == null || n < 0)
+                                ? 'Valor inválido'
+                                : null;
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            SwitchListTile(
-              contentPadding: EdgeInsets.zero,
-              title: const Text('Disponible actualmente'),
-              value: _disponible,
-              activeThumbColor: AppColors.coffeeMedium,
-              onChanged: (v) => setState(() => _disponible = v),
-            ),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _label('Altitud (msnm) — opcional'),
-                      TextFormField(
-                        controller: _altitudCtrl,
-                        keyboardType: TextInputType.number,
-                        validator: (v) {
-                          if (v == null || v.trim().isEmpty) return null;
-                          final n = double.tryParse(v.trim());
-                          return (n == null || n < 0) ? 'Altitud inválida' : null;
-                        },
-                      ),
-                    ],
+                ],
+              ),
+              const SizedBox(height: 10),
+              SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                title: const Text('Disponible actualmente'),
+                value: _disponible,
+                activeThumbColor: AppColors.coffeeMedium,
+                onChanged: (v) => setState(() => _disponible = v),
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _label('Altitud (msnm) — opcional'),
+                        TextFormField(
+                          controller: _altitudCtrl,
+                          keyboardType: TextInputType.number,
+                          validator: (v) {
+                            if (v == null || v.trim().isEmpty) return null;
+                            final n = double.tryParse(v.trim());
+                            return (n == null || n < 0)
+                                ? 'Altitud inválida'
+                                : null;
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _label('Puntaje de taza — opcional'),
-                      TextFormField(
-                        controller: _puntajeCtrl,
-                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                        validator: (v) {
-                          if (v == null || v.trim().isEmpty) return null;
-                          final n = double.tryParse(v.trim());
-                          return (n == null || n < 50 || n > 100) ? 'Entre 50 y 100' : null;
-                        },
-                      ),
-                    ],
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _label('Puntaje de taza — opcional'),
+                        TextFormField(
+                          controller: _puntajeCtrl,
+                          keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true),
+                          validator: (v) {
+                            if (v == null || v.trim().isEmpty) return null;
+                            final n = double.tryParse(v.trim());
+                            return (n == null || n < 50 || n > 100)
+                                ? 'Entre 50 y 100'
+                                : null;
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            _label('Cosecha — opcional'),
-            TextFormField(controller: _cosechaCtrl, decoration: const InputDecoration(hintText: 'Ej: 2025-2')),
-            const SizedBox(height: 20),
-            _label('Descripción'),
-            TextFormField(controller: _descripcionCtrl, maxLines: 3),
-            const SizedBox(height: 24),
-            _label('Perfil de taza — opcional'),
-            _chips(notasCataDisponibles, _notasCataSel),
-            const SizedBox(height: 12),
-            _nivelSelector('Acidez', _acidezSel, (v) => setState(() => _acidezSel = v)),
-            _nivelSelector('Cuerpo', _cuerpoSel, (v) => setState(() => _cuerpoSel = v)),
-            _nivelSelector('Dulzor', _dulzorSel, (v) => setState(() => _dulzorSel = v)),
-            const SizedBox(height: 24),
-            _seccionMayor('Certificaciones y envío'),
-            _label('Métodos de envío'),
-            _chips(metodosEnvioDisponibles, _metodosEnvioSel),
-            const SizedBox(height: 20),
-            _label('Certificaciones'),
-            _chips(certificacionesDisponibles, _certificacionesSel),
-            const SizedBox(height: 32),
-            ElevatedButton(onPressed: () => _guardar(publicar: true), child: const Text('Publicar café')),
-            const SizedBox(height: 10),
-            OutlinedButton(
-              onPressed: () => _guardar(publicar: false),
-              child: const Text('Guardar como borrador'),
-            ),
-            const SizedBox(height: 20),
-          ],
+                ],
+              ),
+              const SizedBox(height: 16),
+              _label('Cosecha — opcional'),
+              TextFormField(
+                  controller: _cosechaCtrl,
+                  decoration: const InputDecoration(hintText: 'Ej: 2025-2')),
+              const SizedBox(height: 20),
+              _label('Descripción'),
+              TextFormField(controller: _descripcionCtrl, maxLines: 3),
+              const SizedBox(height: 24),
+              _label('Perfil de taza — opcional'),
+              _chips(notasCataDisponibles, _notasCataSel),
+              const SizedBox(height: 12),
+              _nivelSelector(
+                  'Acidez', _acidezSel, (v) => setState(() => _acidezSel = v)),
+              _nivelSelector(
+                  'Cuerpo', _cuerpoSel, (v) => setState(() => _cuerpoSel = v)),
+              _nivelSelector(
+                  'Dulzor', _dulzorSel, (v) => setState(() => _dulzorSel = v)),
+              const SizedBox(height: 24),
+              _seccionMayor('Certificaciones y envío'),
+              _label('Métodos de envío'),
+              _chips(metodosEnvioDisponibles, _metodosEnvioSel),
+              const SizedBox(height: 20),
+              _label('Certificaciones'),
+              _chips(certificacionesDisponibles, _certificacionesSel),
+              const SizedBox(height: 32),
+              ElevatedButton(
+                  onPressed: () => _guardar(publicar: true),
+                  child: const Text('Publicar café')),
+              const SizedBox(height: 10),
+              OutlinedButton(
+                onPressed: () => _guardar(publicar: false),
+                child: const Text('Guardar como borrador'),
+              ),
+              const SizedBox(height: 20),
+            ],
+          ),
         ),
-      ),
       ),
     );
   }
@@ -380,16 +422,22 @@ class _CoffeeLotEditScreenState extends State<CoffeeLotEditScreen> {
         padding: const EdgeInsets.only(bottom: 12),
         child: Row(
           children: [
-            Text(texto, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: AppColors.coffeeDark)),
+            Text(texto,
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 17,
+                    color: AppColors.coffeeDark)),
             const SizedBox(width: 10),
-            Expanded(child: Divider(color: AppColors.coffeeLight, thickness: 1)),
+            const Expanded(
+                child: Divider(color: AppColors.coffeeLight, thickness: 1)),
           ],
         ),
       );
 
   Widget _label(String texto) => Padding(
         padding: const EdgeInsets.only(bottom: 8),
-        child: Text(texto, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+        child: Text(texto,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
       );
 
   Widget _chips(List<String> opciones, List<String> seleccionados) {
@@ -402,19 +450,24 @@ class _CoffeeLotEditScreenState extends State<CoffeeLotEditScreen> {
           label: Text(op),
           selected: activo,
           selectedColor: AppColors.coffeeMedium,
-          labelStyle: TextStyle(color: activo ? Colors.white : AppColors.coffeeDark),
-          onSelected: (sel) => setState(() => sel ? seleccionados.add(op) : seleccionados.remove(op)),
+          labelStyle:
+              TextStyle(color: activo ? Colors.white : AppColors.coffeeDark),
+          onSelected: (sel) => setState(
+              () => sel ? seleccionados.add(op) : seleccionados.remove(op)),
         );
       }).toList(),
     );
   }
 
-  Widget _nivelSelector(String etiqueta, String? valor, ValueChanged<String?> onChanged) {
+  Widget _nivelSelector(
+      String etiqueta, String? valor, ValueChanged<String?> onChanged) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: Row(
         children: [
-          SizedBox(width: 70, child: Text(etiqueta, style: const TextStyle(fontSize: 13))),
+          SizedBox(
+              width: 70,
+              child: Text(etiqueta, style: const TextStyle(fontSize: 13))),
           Expanded(
             child: Wrap(
               spacing: 6,
@@ -425,7 +478,8 @@ class _CoffeeLotEditScreenState extends State<CoffeeLotEditScreen> {
                   selected: activo,
                   visualDensity: VisualDensity.compact,
                   selectedColor: AppColors.leafGreen,
-                  labelStyle: TextStyle(color: activo ? Colors.white : AppColors.coffeeDark),
+                  labelStyle: TextStyle(
+                      color: activo ? Colors.white : AppColors.coffeeDark),
                   onSelected: (sel) => onChanged(sel ? n : null),
                 );
               }).toList(),
@@ -445,7 +499,8 @@ class _CoffeeLotEditScreenState extends State<CoffeeLotEditScreen> {
           borderRadius: BorderRadius.circular(14),
           border: Border.all(color: AppColors.coffeeLight),
         ),
-        child: const Center(child: Text('Sin fotos aún', style: TextStyle(color: Colors.grey))),
+        child: const Center(
+            child: Text('Sin fotos aún', style: TextStyle(color: Colors.grey))),
       );
     }
     return SizedBox(
@@ -461,7 +516,13 @@ class _CoffeeLotEditScreenState extends State<CoffeeLotEditScreen> {
               Stack(
                 clipBehavior: Clip.none,
                 children: [
-                  AppImage(path: ruta, galeria: _fotos, indiceEnGaleria: i, width: 90, height: 90, borderRadius: BorderRadius.circular(12)),
+                  AppImage(
+                      path: ruta,
+                      galeria: _fotos,
+                      indiceEnGaleria: i,
+                      width: 90,
+                      height: 90,
+                      borderRadius: BorderRadius.circular(12)),
                   Positioned(
                     top: -6,
                     right: -6,
@@ -478,14 +539,20 @@ class _CoffeeLotEditScreenState extends State<CoffeeLotEditScreen> {
               ),
               const SizedBox(height: 2),
               if (i == 0)
-                const Text('Principal', style: TextStyle(fontSize: 9.5, color: AppColors.leafGreen, fontWeight: FontWeight.bold))
+                const Text('Principal',
+                    style: TextStyle(
+                        fontSize: 9.5,
+                        color: AppColors.leafGreen,
+                        fontWeight: FontWeight.bold))
               else
                 GestureDetector(
                   onTap: () => setState(() {
                     final foto = _fotos.removeAt(i);
                     _fotos.insert(0, foto);
                   }),
-                  child: const Text('Hacer principal', style: TextStyle(fontSize: 9.5, color: AppColors.coffeeMedium)),
+                  child: const Text('Hacer principal',
+                      style: TextStyle(
+                          fontSize: 9.5, color: AppColors.coffeeMedium)),
                 ),
             ],
           );

@@ -22,7 +22,8 @@ class ChatScreen extends StatefulWidget {
   final String interestRequestId;
   final String otroNombre;
 
-  const ChatScreen({super.key, required this.interestRequestId, required this.otroNombre});
+  const ChatScreen(
+      {super.key, required this.interestRequestId, required this.otroNombre});
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -47,11 +48,17 @@ class _ChatScreenState extends State<ChatScreen> {
     _textCtrl.clear();
 
     context.read<MockStore>().enviarMensaje(
-          ChatMessage(id: _uuid.v4(), chatId: widget.interestRequestId, senderId: uid, texto: texto),
+          ChatMessage(
+              id: _uuid.v4(),
+              chatId: widget.interestRequestId,
+              senderId: uid,
+              texto: texto),
         );
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_scrollCtrl.hasClients) _scrollCtrl.jumpTo(_scrollCtrl.position.maxScrollExtent);
+      if (_scrollCtrl.hasClients) {
+        _scrollCtrl.jumpTo(_scrollCtrl.position.maxScrollExtent);
+      }
     });
   }
 
@@ -60,68 +67,77 @@ class _ChatScreenState extends State<ChatScreen> {
     final store = context.watch<MockStore>();
     final miUid = context.read<SessionProvider>().usuario!.uid;
     final conexion = store.solicitudPorId(widget.interestRequestId);
-    final lote = conexion != null ? store.lotePorId(conexion.coffeeLotId) : null;
+    final lote =
+        conexion != null ? store.lotePorId(conexion.coffeeLotId) : null;
     final mensajes = store.mensajesDeChat(widget.interestRequestId);
 
     return PopScope(
       onPopInvokedWithResult: (didPop, _) => liberarFoco(),
       child: DismissKeyboard(
         child: Scaffold(
-      appBar: AppBar(title: Text(widget.otroNombre)),
-      body: Column(
-        children: [
-          if (lote != null) _EncabezadoComercial(lote: lote, conexion: conexion!),
-          Expanded(
-            child: mensajes.isEmpty
-                ? Center(
-                    child: Text(
-                      'Conexión comercial establecida.\n¡Saluda y empieza a negociar!',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.grey.shade500),
-                    ),
-                  )
-                : ListView.builder(
-                    controller: _scrollCtrl,
-                    padding: const EdgeInsets.all(16),
-                    itemCount: mensajes.length,
-                    itemBuilder: (context, i) {
-                      final m = mensajes[i];
-                      return _Burbuja(mensaje: m, esMio: m.senderId == miUid);
-                    },
-                  ),
-          ),
-          SafeArea(
-            top: false,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _textCtrl,
-                      textInputAction: TextInputAction.send,
-                      onSubmitted: (_) => _enviar(),
-                      decoration: InputDecoration(
-                        hintText: 'Escribe un mensaje…',
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(24), borderSide: BorderSide.none),
-                        filled: true,
-                        fillColor: Colors.white,
+          appBar: AppBar(title: Text(widget.otroNombre)),
+          body: Column(
+            children: [
+              if (lote != null)
+                _EncabezadoComercial(lote: lote, conexion: conexion!),
+              Expanded(
+                child: mensajes.isEmpty
+                    ? Center(
+                        child: Text(
+                          'Conexión comercial establecida.\n¡Saluda y empieza a negociar!',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.grey.shade500),
+                        ),
+                      )
+                    : ListView.builder(
+                        controller: _scrollCtrl,
+                        padding: const EdgeInsets.all(16),
+                        itemCount: mensajes.length,
+                        itemBuilder: (context, i) {
+                          final m = mensajes[i];
+                          return _Burbuja(
+                              mensaje: m, esMio: m.senderId == miUid);
+                        },
                       ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  CircleAvatar(
-                    backgroundColor: AppColors.coffeeMedium,
-                    child: IconButton(icon: const Icon(Icons.send, color: Colors.white, size: 20), onPressed: _enviar),
-                  ),
-                ],
               ),
-            ),
+              SafeArea(
+                top: false,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: _textCtrl,
+                          textInputAction: TextInputAction.send,
+                          onSubmitted: (_) => _enviar(),
+                          decoration: InputDecoration(
+                            hintText: 'Escribe un mensaje…',
+                            contentPadding:
+                                const EdgeInsets.symmetric(horizontal: 16),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(24),
+                                borderSide: BorderSide.none),
+                            filled: true,
+                            fillColor: Colors.white,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      CircleAvatar(
+                        backgroundColor: AppColors.coffeeMedium,
+                        child: IconButton(
+                            icon: const Icon(Icons.send,
+                                color: Colors.white, size: 20),
+                            onPressed: _enviar),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-      ),
+        ),
       ),
     );
   }
@@ -135,7 +151,7 @@ class _EncabezadoComercial extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppColors.coffeeLight.withOpacity(0.35),
+      color: AppColors.coffeeLight.withValues(alpha: 0.35),
       padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
       child: Column(
         children: [
@@ -153,8 +169,13 @@ class _EncabezadoComercial extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(lote.nombre, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13), overflow: TextOverflow.ellipsis),
-                    Text(formatCOPPorUnidad(lote.precioCOP, lote.unidad), style: const TextStyle(fontSize: 12, color: AppColors.coffeeDark)),
+                    Text(lote.nombre,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 13),
+                        overflow: TextOverflow.ellipsis),
+                    Text(formatCOPPorUnidad(lote.precioCOP, lote.unidad),
+                        style: const TextStyle(
+                            fontSize: 12, color: AppColors.coffeeDark)),
                   ],
                 ),
               ),
@@ -165,19 +186,26 @@ class _EncabezadoComercial extends StatelessWidget {
             children: [
               Expanded(
                 child: OutlinedButton.icon(
-                  onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => CoffeeLotDetailScreen(coffeeLotId: lote.id))),
+                  onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) =>
+                          CoffeeLotDetailScreen(coffeeLotId: lote.id))),
                   icon: const Icon(Icons.coffee_outlined, size: 16),
-                  label: const Text('Ver café', style: TextStyle(fontSize: 12.5)),
-                  style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(36)),
+                  label:
+                      const Text('Ver café', style: TextStyle(fontSize: 12.5)),
+                  style: OutlinedButton.styleFrom(
+                      minimumSize: const Size.fromHeight(36)),
                 ),
               ),
               const SizedBox(width: 8),
               Expanded(
                 child: ElevatedButton.icon(
-                  onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => QuoteRequestScreen(conexion: conexion))),
+                  onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => QuoteRequestScreen(conexion: conexion))),
                   icon: const Icon(Icons.request_quote_outlined, size: 16),
-                  label: const Text('Cotizar', style: TextStyle(fontSize: 12.5)),
-                  style: ElevatedButton.styleFrom(minimumSize: const Size.fromHeight(36)),
+                  label:
+                      const Text('Cotizar', style: TextStyle(fontSize: 12.5)),
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: const Size.fromHeight(36)),
                 ),
               ),
             ],
@@ -201,7 +229,8 @@ class _Burbuja extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 4),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.72),
+        constraints:
+            BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.72),
         decoration: BoxDecoration(
           color: esMio ? AppColors.coffeeMedium : Colors.white,
           borderRadius: BorderRadius.only(
@@ -214,9 +243,13 @@ class _Burbuja extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Text(mensaje.texto, style: TextStyle(color: esMio ? Colors.white : AppColors.coffeeDark)),
+            Text(mensaje.texto,
+                style: TextStyle(
+                    color: esMio ? Colors.white : AppColors.coffeeDark)),
             const SizedBox(height: 2),
-            Text(DateFormat.Hm().format(mensaje.timestamp), style: TextStyle(fontSize: 10, color: esMio ? Colors.white70 : Colors.grey)),
+            Text(DateFormat.Hm().format(mensaje.timestamp),
+                style: TextStyle(
+                    fontSize: 10, color: esMio ? Colors.white70 : Colors.grey)),
           ],
         ),
       ),

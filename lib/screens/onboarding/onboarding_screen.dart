@@ -39,11 +39,22 @@ class OnboardingScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(esVendedor ? Icons.storefront_outlined : Icons.travel_explore_outlined, color: Colors.white, size: 52),
+              Icon(
+                  esVendedor
+                      ? Icons.storefront_outlined
+                      : Icons.travel_explore_outlined,
+                  color: Colors.white,
+                  size: 52),
               const SizedBox(height: 20),
               Text(
-                esVendedor ? 'Publica tus cafés y\nconecta con compradores.' : 'Encuentra cafés y\nproductores según tus necesidades.',
-                style: const TextStyle(color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold, height: 1.3),
+                esVendedor
+                    ? 'Publica tus cafés y\nconecta con compradores.'
+                    : 'Encuentra cafés y\nproductores según tus necesidades.',
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                    height: 1.3),
               ),
               const SizedBox(height: 24),
               ...pasos.map((p) => Padding(
@@ -52,7 +63,9 @@ class OnboardingScreen extends StatelessWidget {
                       children: [
                         Icon(p.$2, color: Colors.white70, size: 18),
                         const SizedBox(width: 12),
-                        Text(p.$1, style: const TextStyle(color: Colors.white70, fontSize: 14.5)),
+                        Text(p.$1,
+                            style: const TextStyle(
+                                color: Colors.white70, fontSize: 14.5)),
                       ],
                     ),
                   )),
@@ -60,19 +73,26 @@ class OnboardingScreen extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(
                   'El swipe es solo una forma rápida de explorar — puedes usar también la lista y los filtros.',
-                  style: TextStyle(color: Colors.white.withOpacity(0.55), fontSize: 12.5, fontStyle: FontStyle.italic),
+                  style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.55),
+                      fontSize: 12.5,
+                      fontStyle: FontStyle.italic),
                 ),
               ],
               const SizedBox(height: 28),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.white, foregroundColor: AppColors.coffeeDark),
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: AppColors.coffeeDark),
                   onPressed: () => Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(builder: (_) => const HomeShell()),
                     (route) => false,
                   ),
-                  child: Text(esVendedor ? 'Crear mi perfil de marca' : 'Empezar a descubrir'),
+                  child: Text(esVendedor
+                      ? 'Crear mi perfil de marca'
+                      : 'Empezar a descubrir'),
                 ),
               ),
             ],
